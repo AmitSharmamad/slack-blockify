@@ -4,8 +4,21 @@
   "description": "",
   "main": "index.js",
   "repository": {
-    "type": "git"
+    "type": "git",
+    "url": "https://github.com/AmitSharmamad/slack-block-kit.git"
   },
+  "maintainers": [
+    {
+      "name": "amit madgula",
+      "email": "amitsharmamad@gmail.com"
+    }
+  ],
+  "contributors": [
+    {
+      "email": "amitsharmamad@gmail.com",
+      "name": "amit madgula"
+    }
+  ],
   "scripts": {},
   "keywords": [],
   "author": "",
