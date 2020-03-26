@@ -30,7 +30,7 @@ export interface ImageAccessory extends AccessoryDefaults {
 
 export interface ButtonAccessory extends AccessoryDefaults {
     type: 'button';
-    text: TextAccessory;
+    text: PlainTextAccessory;
     value: string;
 }
 
@@ -95,10 +95,14 @@ export interface Divider extends BlockDefaults {
 
 export interface Actions extends BlockDefaults {
     type: 'actions';
-    elements: Element[];
+    elements: (
+        StaticSelectAccessory | ButtonAccessory |
+        OverflowAccessory | DatepickerInput |
+        RadioButtonsAccessory | CheckBoxesAccessory
+    )[];
 }
 
-export type MessageBlock = Section | Image | Context | Divider | Actions;
+export type MessageBlock = Partial<Section | Image | Context | Divider | Actions>;
 
 export type ViewBlock = MessageBlock |
     RadioButtonsAccessory |
