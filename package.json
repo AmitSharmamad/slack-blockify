@@ -7,30 +7,37 @@
         "type": "git",
         "url": "https://github.com/AmitSharmamad/slack-block-kit.git"
     },
-    "maintainers": [
-        {
-            "name": "amit madgula",
-            "email": "amitsharmamad@gmail.com"
-        }
-    ],
+    "bugs": {
+        "email": "amitsharmamad@gmail.com",
+        "url": "https://github.com/AmitSharmamad/slack-block-kit/issues"
+    },
+    "author": "Amit Madgula",
     "contributors": [
         {
             "email": "amitsharmamad@gmail.com",
             "name": "amit madgula"
         }
     ],
-    "keywords": [],
-    "author": "",
+    "maintainers": [
+        {
+            "name": "amit madgula",
+            "email": "amitsharmamad@gmail.com"
+        }
+    ],
+    "keywords": [
+        "slack-block-kit"
+    ],
     "license": "MIT",
     "scripts": {
-        "test": "nodemon --exec ts-node src/test/test.ts"
+        "start": "nodemon --exec ts-node src/app.ts",
+        "test": "nodemon --exec ts-node test/test.ts"
     },
     "devDependencies": {
         "nodemon": "^2.0.2",
-        "reflect-metadata": "^0.1.13",
         "ts-node": "^8.8.1"
     },
     "dependencies": {
-        "typescript": "^3.8.3"
+        "typescript": "^3.8.3",
+        "reflect-metadata": "^0.1.13"
     }
 }

@@ -1,4 +1,4 @@
-export interface MessagePayload {
+export interface InteractiveMessagePayload {
     type: string;
     team: Team;
     user: User;
@@ -10,24 +10,10 @@ export interface MessagePayload {
     actions: any[];
 }
 
-export interface Action {
-    type: string;
-    block_id: string;
-    action_id: string;
-    selected_option: SelectedOption;
-    placeholder: Placeholder;
-    action_ts: string;
-}
-
-export interface Placeholder {
+export interface Text {
     type: string;
     text: string;
     emoji: boolean;
-}
-
-export interface SelectedOption {
-    text: Placeholder;
-    value: string;
 }
 
 export interface Container {
