@@ -6,7 +6,7 @@
 
 ## **Why blockify?**
 
-Reaching the function that handles a block-kit interactive action, involves nested conditional checks, which becomes difficult to handle as the number of actions grow. Blockify abstracts all the boiler plate code of conditional checks, giving a clean approach, using DI (Dependency Injection), to organise the Action Handlers better.
+Reaching the function that handles a block-kit interactive action, involves nested conditional checks, which becomes difficult to handle as the number of actions grow. Blockify abstracts all the boiler plate code with conditional checks, providing a clean approach, using DI (Dependency Injection), to organise the Action Handlers in a better way.
 
 # Usage
 
@@ -64,7 +64,7 @@ class ApprovalActions {
 }
 ```
 
-Only the required payload data can be accessed inside the handler through property decorators
+Only the required payload data can be accessed inside the handler through parameter decorators
 
 -   `parameter decorators` are value providers
 -   The list of property decorators are:
@@ -94,7 +94,7 @@ class ApprovalActions {
 }
 ```
 
-Register all the classes, without fail, using the `register` function.
+Register all the `Actions` classes, without fail, using the `register` function.
 
 ```typescript
 import { register } from "slack-blockify/core";
@@ -103,13 +103,13 @@ register(ApprovalActions);
 ```
 
 Pass the interactive message payload of type `block_actions` to the handlePayload function,
-which a _Generic Function_
+which a _Generic Function_.
+
+`handlePayload` function searches through the registered handlers and executes the respective handler, if found. Otherwise returns "Unhandled Action".
 
 ```typescript
 import { handlePayload } from "slack-blockify/core";
 
-// returns the message that is returned by the handler, if exists or
-// returns "Unhandled Action"
 const response = await handlePayload<ReturnTypeOfMyFunctionHandler>({
     // ... payload sent by slack
 });
@@ -123,7 +123,7 @@ and only the first found handler is executed.
 1. A `value` - (handlers registered with value)
     1. Regex value match
     2. string value match
-2. Array of `values` - (handlers registered with a list of search values)
+2. Array of `values` - (handlers registered with a list of values)
     1. Regex values match
     2. string values match
 3. An `action` with a `block` - (handlers registered with both action_id and block_id)
@@ -146,7 +146,7 @@ and only the first found handler is executed.
 ## Near-Future Usecases
 
 -   Warning messages and Suggestions would be provided, for better debugging.
--   View Submission handling.
+-   Support for View (Modal) Submission.
 
 ## **Authors**
 
