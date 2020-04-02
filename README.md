@@ -2,11 +2,11 @@
 
 ## Description
 
-`slack-blockify`, is a framework that abstracts the boiler plate code of nesting into the handler functions for Slack Interactive Actions, and provides di support to handle large number of actions, using reflection.
+`slack-blockify`, is a framework that abstracts the boiler plate code of nesting into the handler functions that handle Slack Interactive Actions, and provides di support to handle large number of actions, using reflection.
 
 ## **Why blockify?**
 
-Reaching the function that handles a block-kit interactive action, involves nested conditional checks, which becomes difficult to handle as the number of actions grow. Blockify abstracts all the boiler plate code of conditional checks, giving a clean approach, using DI (Dependency Injection), to better organise the Action Handlers.
+Reaching the function that handles a block-kit interactive action, involves nested conditional checks, which becomes difficult to handle as the number of actions grow. Blockify abstracts all the boiler plate code of conditional checks, giving a clean approach, using DI (Dependency Injection), to organise the Action Handlers better.
 
 # Usage
 
@@ -24,18 +24,18 @@ import {
 } from "slack-blockify/decorators";
 ```
 
-Decorate your Actions classes with the Actions decorator
+Decorate the Actions classes with the Actions decorator
 
--   Action Registers are `class decorators`
+-   `class decorators` are Action Registers
 
 ```typescript
 @Actions()
 class ApprovalActions {}
 ```
 
-Annotate all the function handlers with the respective interactive-action-types
+Decorate methods with the respective interactive-action-types
 
--   Handler Registers are `method decorators`
+-   `method decorators` are Handler Registers
 -   The list of method decorators are:
     1.  ButtonAction
     2.  SelectOptionAction
@@ -64,9 +64,9 @@ class ApprovalActions {
 }
 ```
 
-Only the required message data can be accessed inside the handler
+Only the required payload data can be accessed inside the handler through property decorators
 
--   Value Providers are `parameter decorators`
+-   `parameter decorators` are value providers
 -   The list of property decorators are:
     1.  UserInfo
     2.  TeamInfo
@@ -94,7 +94,7 @@ class ApprovalActions {
 }
 ```
 
-Register all the classes, without fail, using register function.
+Register all the classes, without fail, using the `register` function.
 
 ```typescript
 import { register } from "slack-blockify/core";
@@ -138,7 +138,7 @@ and only the first found handler is executed.
 
 ## Best Practices
 
--   Using action_id and block_id while composing the messages, is highly recommended.
+-   Using action_id and block_id, while composing the messages, is highly recommended.
 -   Using direct string values while registering an action handler is recommended instead of a RegExp.
 -   Using action values is not recommended.
 -   Using the combination of action_id and block_id, gives high performance and is a good practice to handle interactive actions.
