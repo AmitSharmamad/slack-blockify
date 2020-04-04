@@ -10,12 +10,6 @@ export interface InteractiveMessagePayload {
     actions: any[];
 }
 
-export interface Text {
-    type: string;
-    text: string;
-    emoji: boolean;
-}
-
 export interface Container {
     type: string;
     text: string;
