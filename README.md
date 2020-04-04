@@ -2,23 +2,11 @@
 
 ## Description
 
-`slack-blockify`, is a framework that abstracts the boiler plate code of nesting into the handler functions of Slack Interactive Actions, and provides di support to handle large number of actions, using reflection.
+`slack-blockify`, is a framework that abstracts the boiler plate code of nesting into the handler functions that handle Slack Interactive Actions, and provides di support to handle large number of actions, using reflection.
 
-## **Before Getting Started**
+## **Why blockify?**
 
-Using action_id and block_id, while composing a block-kit message,
-is the primary thing that has to be done, to use this framework effectively.
-
-Splitting a message into blocks and and giving them meaningful block_id's,
-and action_id's, is an effective way of handling block kit
-interactive actions.
-
-**Advantages of using this framework**
-
-1. The boilerplate code for nesting into the handler functions (which is clumpsy) is abstracted.
-2. Clean Code
-3. Ease of Readability
-4. Full Type support
+Reaching the function that handles a block-kit interactive action, involves nested conditional checks, which becomes difficult to handle as the number of actions grow. Blockify abstracts all the boiler plate code with conditional checks, providing a clean approach, using DI (Dependency Injection), to organise the Action Handlers in a better way.
 
 # Usage
 
@@ -36,18 +24,25 @@ import {
 } from "slack-blockify/decorators";
 ```
 
-Decorate your Actions classes with the Actions decorator
+Decorate the Actions classes with the Actions decorator
 
-Action Registers are `class decorators`
+-   `class decorators` are Action Registers
 
 ```typescript
 @Actions()
 class ApprovalActions {}
 ```
 
-Annotate all the function handlers with the respective interactive-action-types
+Decorate methods with the respective interactive-action-types
 
-Handler Registers are `method decorators`
+-   `method decorators` are Handler Registers
+-   The list of method decorators are:
+    1.  ButtonAction
+    2.  SelectOptionAction
+    3.  SelectOptionsAction
+    4.  OverflowAction
+    5.  DatepickerAction
+    6.  ActionByValue
 
 ```typescript
 @Actions()
@@ -62,9 +57,20 @@ class ApprovalActions {
 }
 ```
 
-Only the required message data can be accessed inside the handler
+Only the required payload data can be accessed inside the handler through parameter decorators
 
-Value Providers are `parameter decorators`
+-   `parameter decorators` are value providers
+-   The list of property decorators are:
+    1.  UserInfo
+    2.  TeamInfo
+    3.  Value (Non-Multi Select)
+    4.  Values (Multi Select)
+    5.  ActionsInfo
+    6.  ContainerInfo
+    7.  TriggerId
+    8.  ResponseUrl
+    9.  ApiAppId
+    10. PayloadInfo
 
 ```typescript
 import { User, Team } from "slack-blockify";
@@ -90,13 +96,13 @@ register([ApprovalActions]);
 ```
 
 Pass the interactive message payload of type `block_actions` to the handlePayload function,
-which a _Generic Function_
+which a _Generic Function_.
+
+`handlePayload` function searches through the registered handlers and executes the respective handler, if found. Otherwise returns "Unhandled Action".
 
 ```typescript
 import { handlePayload } from "slack-blockify/core";
 
-// returns the message that is returned by the handler, if exists or
-// returns "Unhandled Action"
 const response = await handlePayload<ReturnTypeOfMyFunctionHandler>({
     // ... payload sent by slack
 });
