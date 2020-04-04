@@ -1,8 +1,8 @@
 import "reflect-metadata";
 
 import { actionSymbol } from "./symbols";
-import { Container } from "../core/store";
 import { ActionMetadata } from "./method.decorators";
+import { setHandler } from "../core/store";
 
 /**
  * Decorator that marks a class as an ActionsController
@@ -24,7 +24,7 @@ export const Actions = (): ClassDecorator => (target: any) => {
         if (action.options) {
             const { actionId, blockId, values } = action.options;
             const fn = t[action.name];
-            Container.setHandler(
+            setHandler(
                 {
                     actionId,
                     blockId,

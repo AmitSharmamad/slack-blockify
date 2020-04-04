@@ -3,7 +3,9 @@ import {
     ExpressionType,
     ValueType
 } from "../decorators/method.decorators";
-import { InteractiveMessagePayload } from "../types/payloads";
+import { InteractiveMessagePayload } from "../types/payloads/im-message";
+import { Message } from "../types/messages";
+import { Modal } from "../types/views";
 
 interface Metadata {
     target: any;
@@ -18,6 +20,12 @@ interface MappingOptions {
     values: ValueType;
 }
 
+type Priority = "Value" | "Actions" | "Blocks" | "ActionsWithBlocks" | "";
+
+interface Configuration {
+    priorities: Priority[];
+}
+
 const check = (actual: string, expected: ExpressionType) => {
     return (
         (expected instanceof RegExp && expected.test(actual)) ||
@@ -25,81 +33,147 @@ const check = (actual: string, expected: ExpressionType) => {
     );
 };
 
-export class Container {
-    private static stores: {
-        actionId: ExpressionType;
-        blockId: ExpressionType;
-        values: ValueType;
-        metadata: Metadata;
-    }[] = [];
-    static setHandler(options: Partial<MappingOptions>, metadata: Metadata) {
-        const { actionId, blockId, values } = options;
-        this.stores.push({
-            actionId,
-            blockId,
-            values,
-            metadata
+const stores: {
+    actionId: ExpressionType;
+    blockId: ExpressionType;
+    values: ValueType;
+    metadata: Metadata;
+}[] = [];
+
+const config: {
+    priorities: { index: number; priority: Priority }[];
+} = { priorities: [] };
+
+const setConfiguration = (configuration: Configuration) => {
+    if (configuration) {
+        let priorityNumber = 0;
+        config.priorities = configuration.priorities.map(priority => {
+            return {
+                index: priorityNumber++,
+                priority
+            };
         });
-    }
-    static getHandler(
-        options: Partial<{
-            actionId: string;
-            blockId: string;
-            value: string;
-            actionType: string;
-        }>
-    ): Metadata {
-        const { actionId, blockId, value, actionType } = options;
-        return (
-            this.stores.find(action => {
-                if (
-                    !action.values &&
-                    actionType !== action.metadata.options.type
-                ) {
-                    return false;
-                }
-                // #1 Checking the regex
-                if (action?.values instanceof RegExp) {
-                    return true;
-                }
-                // #2 Checking String
-                if (typeof action?.values === "string") {
-                    return true;
-                }
-                // #3 Checking values array
-                if (action?.values instanceof Array) {
-                    for (const v of action.values) {
-                        if (check(value, v)) {
-                            return true;
-                        }
-                    }
-                }
-                // #4 Checing Action with a Block
-                if (action.actionId && action.blockId) {
-                    if (
-                        check(actionId, action.actionId) &&
-                        check(blockId, action.blockId)
-                    ) {
-                        return true;
-                    }
-                }
-                // #5 Checking Action
-                if (action.actionId) {
-                    if (check(actionId, action.actionId)) {
-                        return true;
-                    }
-                }
-                // #6 Checking Block
-                if (action.blockId) {
-                    if (check(blockId, action.blockId)) {
-                        return true;
-                    }
-                }
-                return false;
-            })?.metadata || null
+    } else {
+        // set default configuration
+        config.priorities.push(
+            {
+                index: 0,
+                priority: "ActionsWithBlocks"
+            },
+            {
+                index: 1,
+                priority: "Actions"
+            },
+            {
+                index: 2,
+                priority: "Blocks"
+            },
+            {
+                index: 3,
+                priority: "Value"
+            }
         );
     }
-}
+    config.priorities.sort(
+        (priority1, priority2) => priority1.index - priority2.index
+    );
+};
+
+export const setHandler = (
+    options: Partial<MappingOptions>,
+    metadata: Metadata
+) => {
+    const { actionId, blockId, values } = options;
+    stores.push({
+        actionId,
+        blockId,
+        values,
+        metadata
+    });
+    stores.sort(
+        (action1, action2) =>
+            action1.metadata.options?.priority -
+            action2.metadata.options?.priority
+    );
+};
+
+export const getHandler = (
+    options: Partial<{
+        actionId: string;
+        blockId: string;
+        value: string;
+        actionType: string;
+    }>
+): Metadata => {
+    const { actionId, blockId, value, actionType } = options;
+    return (
+        stores.find(action => {
+            return !!config.priorities.find(priority => {
+                switch (priority.priority) {
+                    case "Value": {
+                        if (
+                            !action.values &&
+                            actionType !== action.metadata.options.type
+                        ) {
+                            return false;
+                        }
+                        // #1 Checking the regex
+                        if (action?.values instanceof RegExp) {
+                            return true;
+                        }
+                        // #2 Checking String
+                        if (typeof action?.values === "string") {
+                            return true;
+                        }
+                        // #3 Checking values array
+                        if (action?.values instanceof Array) {
+                            for (const v of action.values) {
+                                if (check(value, v)) {
+                                    return true;
+                                }
+                            }
+                        }
+                        if (typeof action?.values === "function") {
+                            if (action.values(value)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                    case "ActionsWithBlocks": {
+                        if (action.actionId && action.blockId) {
+                            if (
+                                check(actionId, action.actionId) &&
+                                check(blockId, action.blockId)
+                            ) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                    case "Actions": {
+                        if (action.actionId) {
+                            if (check(actionId, action.actionId)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                    case "Blocks": {
+                        if (action.blockId) {
+                            if (check(blockId, action.blockId)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                    default:
+                        return false;
+                }
+            });
+        })?.metadata || null
+    );
+};
 
 const getValue = (payload: InteractiveMessagePayload) => {
     const [action] = payload.actions;
@@ -152,7 +226,7 @@ const getArgs = (tokens: any[], payload: InteractiveMessagePayload) => {
  */
 export const handlePayload = async <Response>(
     payload: InteractiveMessagePayload
-): Promise<"Unhandled Action" | Response> => {
+): Promise<"Unhandled Action" | Message | Modal | Response> => {
     if (payload.type !== "block_actions")
         throw `Only block actions are supported for now`;
     const [action] = payload.actions;
@@ -160,7 +234,7 @@ export const handlePayload = async <Response>(
     const blockId = action.block_id;
     const actionType = action.type;
     const value = getValue(payload);
-    const actionToHandle = Container.getHandler({
+    const actionToHandle = getHandler({
         actionId,
         blockId,
         value,
@@ -184,6 +258,7 @@ export const handlePayload = async <Response>(
  * Registers the provided classes that are decorated with Actions
  * @param classes
  */
-export const register = (...classes: any[]) => {
-    classes;
+export const register = (actions: any[], configuration?: Configuration) => {
+    actions;
+    setConfiguration(configuration);
 };

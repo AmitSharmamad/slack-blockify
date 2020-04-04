@@ -18,6 +18,7 @@ interactive actions.
 1. The boilerplate code for nesting into the handler functions (which is clumpsy) is abstracted.
 2. Clean Code
 3. Ease of Readability
+4. Full Type support
 
 # Usage
 
@@ -58,13 +59,6 @@ class ApprovalActions {
         // handle the approval action
         return "approved";
     }
-    // Method to handle the action with the `action_id` reject
-    // and block_id approvals
-    @ButtonAction("reject", "approvals")
-    async handleRejection() {
-        // handle the reject action
-        return "rejected";
-    }
 }
 ```
 
@@ -87,12 +81,12 @@ class ApprovalActions {
 }
 ```
 
-Register all the classes, without fail, using register function.
+Register all the classes in an Array, without fail, using register function.
 
 ```typescript
 import { register } from "slack-blockify/core";
 
-register(ApprovalActions);
+register([ApprovalActions]);
 ```
 
 Pass the interactive message payload of type `block_actions` to the handlePayload function,
@@ -113,26 +107,40 @@ const response = await handlePayload<ReturnTypeOfMyFunctionHandler>({
 handlePayload searches the registered handlers in the following order,
 and only the first found handler is executed.
 
-1. A `value` - (handlers registered with value)
-    1. Regex value match
-    2. string value match
-2. Array of `values` - (handlers registered with a list of search values)
-    1. Regex values match
-    2. string values match
-3. An `action` with a `block` - (handlers registered with both action_id and block_id)
+1. An `action` with a `block` - (handlers registered with both action_id and block_id)
     1. Regex action_id and block_id match
     2. string action_id and block_id match
-4. An `action` - (handlers registered with only action_id)
+2. An `action` - (handlers registered with only action_id)
     1. Regex action_id match
     2. string action_id match
-5. A `block` - (handlers registered with only block_id)
+3. A `block` - (handlers registered with only block_id)
     1. Regex block_id match
     2. string block_id match
+4. A `value` - (handlers registered with value)
+    1. Regex value match
+    2. string value match
+5. Array of `values` - (handlers registered with a list of search values)
+    1. Regex values match
+    2. string values match
+6. A `value` validating function - (handlers registered with value validating function)
+    1. The provided function is executed and its boolean result finds the handler
 
-## Near-Future Usecases
+## Prioritising your Actions and Blocks
 
--   Warning messages and Suggestions would be provided, for better debugging.
--   View Submission handling.
+You can pass the `Configuration options` (optional), as the second parameter to the register function, to achieve high performance.
+
+The below is the default configuration for high performance.
+
+```typescript
+register([...classes], {
+    priorities: ["ActionsWithBlocks", "Actions", "Blocks", "Value"]
+});
+```
+
+## Upcoming features
+
+-   Warning messages and Suggestions, for better debugging.
+-   View Submission handling, for modal submissions.
 
 ## **Authors**
 

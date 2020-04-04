@@ -2,7 +2,8 @@ import "reflect-metadata";
 import { actionSymbol } from "./symbols";
 
 export type ExpressionType = string | RegExp;
-export type ValueType = ExpressionType | ExpressionType[];
+type ValueValidator = (value: string) => boolean;
+export type ValueType = ExpressionType | ExpressionType[] | ValueValidator;
 
 export type ActionType =
     | "button"
@@ -23,6 +24,7 @@ export interface Options {
     actionId?: ExpressionType;
     blockId?: ExpressionType;
     values?: ValueType;
+    priority?: number;
 }
 
 const storeActionMetadata = (
@@ -46,12 +48,14 @@ const storeActionMetadata = (
  */
 export const ButtonAction = (
     actionId: ExpressionType,
-    blockId?: ExpressionType
+    blockId?: ExpressionType,
+    priority?: number
 ): MethodDecorator => (target: any, propertyKey: string | Symbol) => {
     storeActionMetadata(target, propertyKey, {
         type: "button",
         actionId,
-        blockId
+        blockId,
+        priority
     });
 };
 
@@ -63,12 +67,14 @@ export const ButtonAction = (
  */
 export const SelectOptionAction = (
     actionId: ExpressionType,
-    blockId?: ExpressionType
+    blockId?: ExpressionType,
+    priority?: number
 ): MethodDecorator => (target: any, propertyKey: string | Symbol) => {
     storeActionMetadata(target, propertyKey, {
         type: "static_select",
         actionId,
-        blockId
+        blockId,
+        priority
     });
 };
 
@@ -80,12 +86,14 @@ export const SelectOptionAction = (
  */
 export const SelectOptionsAction = (
     actionId: ExpressionType,
-    blockId?: ExpressionType
+    blockId?: ExpressionType,
+    priority?: number
 ): MethodDecorator => (target: any, propertyKey: string | Symbol) => {
     storeActionMetadata(target, propertyKey, {
         type: "multi_static_select",
         actionId,
-        blockId
+        blockId,
+        priority
     });
 };
 
@@ -97,12 +105,14 @@ export const SelectOptionsAction = (
  */
 export const OverflowAction = (
     actionId: ExpressionType,
-    blockId?: ExpressionType
+    blockId?: ExpressionType,
+    priority?: number
 ): MethodDecorator => (target: any, propertyKey: string | Symbol) => {
     storeActionMetadata(target, propertyKey, {
         type: "overflow",
         actionId,
-        blockId
+        blockId,
+        priority
     });
 };
 
@@ -114,12 +124,14 @@ export const OverflowAction = (
  */
 export const DatepickerAction = (
     actionId: ExpressionType,
-    blockId?: ExpressionType
+    blockId?: ExpressionType,
+    priority?: number
 ): MethodDecorator => (target: any, propertyKey: string | Symbol) => {
     storeActionMetadata(target, propertyKey, {
         type: "datepicker",
         actionId,
-        blockId
+        blockId,
+        priority
     });
 };
 
@@ -131,14 +143,16 @@ export const DatepickerAction = (
  * @param {(RegExp|string)=} blockId Unique Block Id to identify
  */
 export const ActionByValue = (
-    values: ExpressionType | ExpressionType[],
+    values: ValueType,
     actionId?: ExpressionType,
-    blockId?: ExpressionType
+    blockId?: ExpressionType,
+    priority?: number
 ): MethodDecorator => (target: any, propertyKey: string | Symbol) => {
     storeActionMetadata(target, propertyKey, {
         type: "value",
         values,
         actionId,
-        blockId
+        blockId,
+        priority
     });
 };
