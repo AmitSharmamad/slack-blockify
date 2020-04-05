@@ -11,7 +11,7 @@ import {
     ImageElement,
     PlainTextInput,
     MultiSelectMenus,
-    Elements
+    Elements,
 } from "./block-elements";
 
 import { Text, WithMrkdwn, Plain } from "./composition-objects";
@@ -64,13 +64,9 @@ export interface Input extends Block {
     optional?: boolean;
 }
 
-export interface SectionBlock extends Block {
+export interface Section extends Block {
     type: "section";
     text: Text<WithMrkdwn>;
     fields: Text<WithMrkdwn>[];
     accessory?: Elements;
 }
-
-export type Section = Block & {
-    type: "section";
-} & (Pick<SectionBlock, "fields"> | Pick<SectionBlock, "text">);
