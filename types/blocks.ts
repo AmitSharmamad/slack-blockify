@@ -66,7 +66,7 @@ export interface Input extends Block {
 
 export interface Section extends Block {
     type: "section";
-    text: Text<WithMrkdwn>;
-    fields: Text<WithMrkdwn>[];
+    text?: Text<WithMrkdwn>;
+    fields?: Text<WithMrkdwn>[];
     accessory?: Elements;
 }
