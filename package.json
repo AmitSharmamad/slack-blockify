@@ -1,7 +1,7 @@
 {
     "name": "slack-blockify",
-    "version": "1.0.1",
-    "description": "",
+    "version": "2.0.0",
+    "description": "A framework for Slack Block Kit Interactive actions",
     "main": "index.js",
     "repository": {
         "type": "git",
@@ -25,7 +25,11 @@
         }
     ],
     "keywords": [
-        "slack-block-kit"
+        "slack-blockify",
+        "slack-block-kit",
+        "slack-types",
+        "slack-interactive-actions",
+        "typescript"
     ],
     "license": "MIT",
     "scripts": {
