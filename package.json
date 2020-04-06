@@ -43,6 +43,7 @@
     },
     "dependencies": {
         "reflect-metadata": "^0.1.13",
+        "slack-blockify-types": "^1.0.0",
         "typescript": "^3.8.3"
     }
 }

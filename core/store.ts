@@ -1,11 +1,13 @@
 import {
+    InteractiveMessagePayload,
+    Message,
+    Modal,
+} from "slack-blockify-types";
+import {
     Options,
     ExpressionType,
-    ValueType
+    ValueType,
 } from "../decorators/method.decorators";
-import { InteractiveMessagePayload } from "../types/payloads/im-message";
-import { Message } from "../types/messages";
-import { Modal } from "../types/views";
 
 interface Metadata {
     target: any;
@@ -47,10 +49,10 @@ const config: {
 const setConfiguration = (configuration: Configuration) => {
     if (configuration) {
         let priorityNumber = 0;
-        config.priorities = configuration.priorities.map(priority => {
+        config.priorities = configuration.priorities.map((priority) => {
             return {
                 index: priorityNumber++,
-                priority
+                priority,
             };
         });
     } else {
@@ -58,19 +60,19 @@ const setConfiguration = (configuration: Configuration) => {
         config.priorities.push(
             {
                 index: 0,
-                priority: "ActionsWithBlocks"
+                priority: "ActionsWithBlocks",
             },
             {
                 index: 1,
-                priority: "Actions"
+                priority: "Actions",
             },
             {
                 index: 2,
-                priority: "Blocks"
+                priority: "Blocks",
             },
             {
                 index: 3,
-                priority: "Value"
+                priority: "Value",
             }
         );
     }
@@ -88,7 +90,7 @@ export const setHandler = (
         actionId,
         blockId,
         values,
-        metadata
+        metadata,
     });
     stores.sort(
         (action1, action2) =>
@@ -107,8 +109,8 @@ export const getHandler = (
 ): Metadata => {
     const { actionId, blockId, value, actionType } = options;
     return (
-        stores.find(action => {
-            return !!config.priorities.find(priority => {
+        stores.find((action) => {
+            return !!config.priorities.find((priority) => {
                 switch (priority.priority) {
                     case "Value": {
                         if (
@@ -238,7 +240,7 @@ export const handlePayload = async <Response>(
         actionId,
         blockId,
         value,
-        actionType
+        actionType,
     });
     if (!actionToHandle) return "Unhandled Action";
     if (actionToHandle?.fn && actionToHandle?.target) {
