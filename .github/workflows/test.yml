@@ -1,4 +1,4 @@
-name: slack-blockify test
+name: test
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: slack-blockify test
+      - name: test
         run: |
           echo "Running slack-blockify tests"
           npm run build
