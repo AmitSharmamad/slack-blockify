@@ -10,9 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      uses: actions/checkout@v2
-      name: slack-blockify test
-      run: |
+      - uses: actions/checkout@v2
+      - name: slack-blockify test
+        run: |
           echo "Running slack-blockify tests"
           npm test
           echo "Running tests completed"
