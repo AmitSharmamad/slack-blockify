@@ -42,6 +42,14 @@ const stores: {
     metadata: Metadata;
 }[] = [];
 
+/**
+ * Should be strictly used to run tests.
+ * When called, clears all the registered handlers
+ */
+export const clearStore = () => {
+    stores.length = 0;
+};
+
 const config: {
     priorities: { index: number; priority: Priority }[];
 } = { priorities: [] };
@@ -49,32 +57,47 @@ const config: {
 const setConfiguration = (configuration: Configuration) => {
     if (configuration) {
         let priorityNumber = 0;
-        config.priorities = configuration.priorities.map((priority) => {
-            return {
-                index: priorityNumber++,
-                priority,
-            };
-        });
+        configuration.priorities = configuration.priorities.filter(
+            (priority) =>
+                !config.priorities.find((p) => priority === p.priority)
+        );
+        if (config.priorities?.length) {
+            config.priorities.push(
+                ...configuration.priorities.map((priority) => {
+                    return {
+                        index: priorityNumber++,
+                        priority,
+                    };
+                })
+            );
+        } else
+            config.priorities = configuration.priorities.map((priority) => {
+                return {
+                    index: priorityNumber++,
+                    priority,
+                };
+            });
     } else {
         // set default configuration
-        config.priorities.push(
-            {
-                index: 0,
-                priority: "ActionsWithBlocks",
-            },
-            {
-                index: 1,
-                priority: "Actions",
-            },
-            {
-                index: 2,
-                priority: "Blocks",
-            },
-            {
-                index: 3,
-                priority: "Value",
-            }
-        );
+        if (!config.priorities.length)
+            config.priorities.push(
+                {
+                    index: 0,
+                    priority: "ActionsWithBlocks",
+                },
+                {
+                    index: 1,
+                    priority: "Actions",
+                },
+                {
+                    index: 2,
+                    priority: "Blocks",
+                },
+                {
+                    index: 3,
+                    priority: "Value",
+                }
+            );
     }
     config.priorities.sort(
         (priority1, priority2) => priority1.index - priority2.index
@@ -121,11 +144,11 @@ export const getHandler = (
                         }
                         // #1 Checking the regex
                         if (action?.values instanceof RegExp) {
-                            return true;
+                            if (check(value, action.values)) return true;
                         }
                         // #2 Checking String
                         if (typeof action?.values === "string") {
-                            return true;
+                            if (check(value, action.values)) return true;
                         }
                         // #3 Checking values array
                         if (action?.values instanceof Array) {
@@ -216,6 +239,8 @@ const getArgs = (tokens: any[], payload: InteractiveMessagePayload) => {
             args[d.idx] = getValue(payload);
         } else if (d.type === "values") {
             args[d.idx] = getValues(payload);
+        } else if (d.type === "payload") {
+            args[d.idx] = payload;
         } else args[d.idx] = (payload as any)[d.type];
         return results;
     }, args);

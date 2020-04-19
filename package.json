@@ -34,14 +34,21 @@
     "license": "MIT",
     "scripts": {
         "dev": "nodemon --exec ts-node src/app.ts",
-        "build": "npm i && tsc && rm -r {core,decorators} && rm index.ts && mv dist/* . && rm -r {dist,node_modules} && rm package-lock.json"
+        "rm-ts-files": "rm -r {core,decorators,test} && rm index.ts",
+        "rm-extra": "rm -r {dist,node_modules} && npm run rm-tests && rm package-lock.json",
+        "rm-tests": "rm -r test",
+        "build": "npm i && tsc && npm run rm-ts-files && mv dist/* . && npm run rm-extra",
+        "test": "mocha -r ts-node/register test/**/*.test.ts",
+        "test:debug": "nodemon --exec mocha -r ts-node/register test/**/*.test.ts"
     },
     "devDependencies": {
+        "@types/chai": "^4.2.11",
         "@types/node": "^13.11.0",
         "nodemon": "^2.0.2",
         "ts-node": "^8.8.1"
     },
     "dependencies": {
+        "chai": "^4.2.0",
         "reflect-metadata": "^0.1.13",
         "slack-blockify-types": "^1.0.0",
         "typescript": "^3.8.3"
