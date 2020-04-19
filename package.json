@@ -1,6 +1,6 @@
 {
     "name": "slack-blockify",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "description": "A framework for Slack Block Kit Interactive actions",
     "main": "index.js",
     "repository": {
@@ -33,11 +33,12 @@
     ],
     "license": "MIT",
     "scripts": {
+        "build": "tsc",
         "dev": "nodemon --exec ts-node src/app.ts",
         "rm-ts-files": "rm -r {core,decorators,test} && rm index.ts",
         "rm-extra": "rm -r {dist,node_modules} && npm run rm-tests && rm package-lock.json",
         "rm-tests": "rm -r test",
-        "build": "npm i && tsc && npm run rm-ts-files && mv dist/* . && npm run rm-extra",
+        "publish": "npm i && tsc && npm run rm-ts-files && mv dist/* . && npm run rm-extra",
         "test": "mocha -r ts-node/register test/**/*.test.ts",
         "test:debug": "nodemon --exec mocha -r ts-node/register test/**/*.test.ts"
     },
