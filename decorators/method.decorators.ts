@@ -33,9 +33,12 @@ const storeActionMetadata = (
     options?: Options
 ) => {
     const actions = Reflect.getOwnMetadata(actionSymbol, target) || [];
+    if (options?.priority == null) {
+        options.priority = Infinity;
+    }
     actions.push({
         name,
-        options
+        options,
     });
     Reflect.defineMetadata(actionSymbol, actions, target);
 };
@@ -55,7 +58,7 @@ export const ButtonAction = (
         type: "button",
         actionId,
         blockId,
-        priority
+        priority,
     });
 };
 
@@ -74,7 +77,7 @@ export const SelectOptionAction = (
         type: "static_select",
         actionId,
         blockId,
-        priority
+        priority,
     });
 };
 
@@ -93,7 +96,7 @@ export const SelectOptionsAction = (
         type: "multi_static_select",
         actionId,
         blockId,
-        priority
+        priority,
     });
 };
 
@@ -112,7 +115,7 @@ export const OverflowAction = (
         type: "overflow",
         actionId,
         blockId,
-        priority
+        priority,
     });
 };
 
@@ -131,7 +134,7 @@ export const DatepickerAction = (
         type: "datepicker",
         actionId,
         blockId,
-        priority
+        priority,
     });
 };
 
@@ -153,6 +156,6 @@ export const ActionByValue = (
         values,
         actionId,
         blockId,
-        priority
+        priority,
     });
 };
