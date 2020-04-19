@@ -34,24 +34,26 @@
     "license": "MIT",
     "scripts": {
         "build": "npm i && tsc",
-        "dev": "nodemon --exec ts-node src/app.ts",
+        "test": "mocha -r ts-node/register test/**/*.test.ts",
+        "debug": "nodemon --exec ts-node src/app.ts",
+        "test:debug": "nodemon --exec mocha -r ts-node/register test/**/*.test.ts",
         "rm-ts-files": "rm -r {core,decorators,test} && rm index.ts",
         "rm-extra": "rm -r {dist,node_modules} && npm run rm-tests && rm package-lock.json",
         "rm-tests": "rm -r test",
-        "publish": "npm i && tsc && npm run rm-ts-files && mv dist/* . && npm run rm-extra",
-        "test": "mocha -r ts-node/register test/**/*.test.ts",
-        "test:debug": "nodemon --exec mocha -r ts-node/register test/**/*.test.ts"
+        "publish": "npm run build && npm run rm-ts-files && mv dist/* . && npm run rm-extra"
     },
     "devDependencies": {
         "@types/chai": "^4.2.11",
+        "@types/mocha": "^7.0.2",
         "@types/node": "^13.11.0",
         "nodemon": "^2.0.2",
         "ts-node": "^8.8.1"
     },
     "dependencies": {
         "chai": "^4.2.0",
+        "mocha": "^7.1.1",
         "reflect-metadata": "^0.1.13",
-        "slack-blockify-types": "^1.0.0",
+        "slack-blockify-types": "latest",
         "typescript": "^3.8.3"
     }
 }

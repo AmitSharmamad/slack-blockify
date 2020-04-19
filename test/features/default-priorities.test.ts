@@ -5,7 +5,7 @@ import { register, handlePayload, clearStore } from "../../core";
 import { getInteractiveMessagePayloadWithActions } from "../utils/slack-payload";
 
 describe("should pass priority test", () => {
-    beforeAll(() => {
+    before(() => {
         clearStore();
 
         @Actions()

@@ -8,6 +8,9 @@
             "es2017",
             "esnext.asynciterable"
         ],
+        "types": [
+            "mocha"
+        ],
         "declaration": true,
         "outDir": "dist",
         "moduleResolution": "node",
@@ -29,6 +32,7 @@
     },
     "exclude": [
         "node_modules",
+        "test",
         "dist"
     ]
 }
