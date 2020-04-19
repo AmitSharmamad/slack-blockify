@@ -33,7 +33,7 @@
     ],
     "license": "MIT",
     "scripts": {
-        "build": "tsc",
+        "build": "npm i && tsc",
         "dev": "nodemon --exec ts-node src/app.ts",
         "rm-ts-files": "rm -r {core,decorators,test} && rm index.ts",
         "rm-extra": "rm -r {dist,node_modules} && npm run rm-tests && rm package-lock.json",
