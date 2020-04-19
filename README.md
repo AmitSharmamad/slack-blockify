@@ -1,5 +1,18 @@
-<h1 style="text-align: center;"><b>Slack Blockify</b></h1>
+<p>
+	<h3 align="center">Slack Blockify</h3>
+    <p align="center">
+    A scalable Slack Block Kit Interactive Message handling framework.
+    </p>
+</p>
 
+<p align="center">
+    <a href="https://github.com/AmitSharmamad/slack-blockify/actions?query=workflow%3Abuild" target="_blank">
+	<img src="https://github.com/AmitSharmamad/slack-blockify/workflows/build/badge.svg" alt="build" />
+    </a>
+    <a href="https://github.com/AmitSharmamad/slack-blockify/actions?query=workflow%3Atest" target="_blank">
+	<img src="https://github.com/AmitSharmamad/slack-blockify/workflows/test/badge.svg" alt="test" />
+    </a>
+</p>
 ## Description
 
 `slack-blockify`, is a framework that abstracts the boiler plate code of nesting into the handler functions that handle Slack Interactive Actions, and provides di support to handle large number of actions, using reflection.
