@@ -14,5 +14,6 @@ jobs:
       - name: slack-blockify test
         run: |
           echo "Running slack-blockify tests"
+          npm run build
           npm test
           echo "Running tests completed"
